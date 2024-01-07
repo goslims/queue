@@ -3,7 +3,7 @@
  * @author Drajat Hasan
  * @email <drajathasan20@gmail.com>
  * @create date 2024-01-07 18:22:53
- * @modify date 2024-01-07 18:26:48
+ * @modify date 2024-01-08 05:58:05
  * @license GPLv3
  * @desc [description]
  */
@@ -17,6 +17,11 @@ abstract class Standart
      * Handler name
      */
     protected string $name = '';
+
+    /**
+     * Channel
+     */
+    protected string $channel = '';
 
     /**
      * Handler options
@@ -53,6 +58,18 @@ abstract class Standart
      * @return void
      */
     abstract protected function consume(string $topic, Closure $callback):void;
+
+    /**
+     * Setter for channel property
+     *
+     * @param string $channelName
+     * @return self
+     */
+    public function setChannel(string $channelName)
+    {
+        $this->channel = $channelName;
+        return $this;
+    }
 
     /**
      * Setter for option

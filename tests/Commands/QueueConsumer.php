@@ -28,14 +28,18 @@ class QueueConsumer extends Command
      */
     public function handle()
     {
-        try {
-            Queue::consume('slims', function($jobSeq, $data) {
-                $data = json_decode($data);
-                dump($data);
-                $this->info('Finish job ' . $jobSeq);
-            });
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+        // Basic usage
+        Queue::consume(topic: 'slims', callback: function($data, $jobSeq) {
+            $data = json_decode($data);
+            dump($data);
+            $this->info('Finish job ' . $jobSeq);
+        });
+
+        // With channel
+        // Queue::setChannel('youtube')->consume(topic: 'slims', callback: function($data, $jobSeq) {
+        //     $data = json_decode($data);
+        //     dump($data);
+        //     $this->info('Finish job ' . $jobSeq);
+        // });
     }
 } 

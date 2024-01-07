@@ -3,7 +3,7 @@
  * @author Drajat Hasan
  * @email <drajathasan20@gmail.com>
  * @create date 2024-01-07 18:26:54
- * @modify date 2024-01-07 18:30:17
+ * @modify date 2024-01-08 06:03:01
  * @license GPLv3
  * @desc [description]
  */
@@ -54,6 +54,7 @@ class Database extends Standart
     public function consume(string $topic, Closure $callback):void
     {
         $db = DB::getInstance();
+        if (empty($this->channel)) $this->channel = substr(md5(rand(1,100)), 0,15);
 
         while (true) {
             $db->exec('START TRANSACTION');
@@ -69,10 +70,10 @@ class Database extends Standart
                 continue;
             }
 
-            $callback($data['id'], $data['message']);
+            $callback($data['message'], $data['id']);
 
-            $update = $db->prepare('update `' . $this->getOption('table') . '` set `status` = 1, `updated_at` = now() where `id` = ?');
-            $update->execute([$data['id']]);
+            $update = $db->prepare('update `' . $this->getOption('table') . '` set `status` = 1, `channel` = ?,`updated_at` = now() where `id` = ?');
+            $update->execute([$this->channel, $data['id']]);
             
             $db->exec('COMMIT');
 
@@ -106,10 +107,12 @@ class Database extends Standart
         Schema::create('queue', function(Blueprint $table) {
             $table->autoIncrement('id');
             $table->string('topic', 30)->notNull();
+            $table->string('channel', 30)->nullable();
             $table->text('message')->notNull();
             $table->tinynumber('status', 1)->default(0);
             $table->timestamps();
             $table->index('topic');
+            $table->index('channel');
             $table->fulltext('message');
             $table->engine = 'InnoDB';
         });

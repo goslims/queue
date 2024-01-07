@@ -5,7 +5,7 @@ A library component to SLiMS, manage queue task for asyncronous process with man
 ```php
 use SLiMS\Queue\Manager as Queue;
 
-Queue::produce('your message/formatter task etc'); // by default topic is slims
+Queue::produce('your message/formatter task etc'); // default topic is slims
 
 // or 
 
@@ -17,6 +17,12 @@ Queue::produce('your message/formatter task etc', topic: 'csv_process');
 use SLiMS\Queue\Manager as Queue;
 
 Queue::consume(topic: 'slims', callback: function($message){
+    // write your code here
+});
+
+// with channel name
+
+Queue::setChannel('worker1')->consume(topic: 'slims', callback: function($message){
     // write your code here
 });
 ```
