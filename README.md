@@ -1,6 +1,11 @@
 # SLiMS Queue
 A SLiMS component to manage queue processes. You can provide your handler, please read handler standart in ```src/Handlers/```.
 ## How to
+### install
+```bash
+composer require slims/queue
+```
+
 ### Produce
 ```php
 use SLiMS\Queue\Manager as Queue;
